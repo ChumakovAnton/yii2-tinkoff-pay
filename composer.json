@@ -1,0 +1,22 @@
+{
+    "name": "chumakovanton/yii2-tinkoff-pay",
+    "description": "Extension for oplata.tinkoff.ru merchant API",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","tinkoff","tinkoff.ru","oplata.tinkoff.ru","merchant","payment","pay"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Chumakov Anton",
+            "email": "anton.4umakov@yandex.ru"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*",
+        "roave/security-advisories": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "chumakovanton\\tinkoffPay\\": ""
+        }
+    }
+}
