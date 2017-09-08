@@ -103,6 +103,17 @@ class RequestInit extends AbstractRequest
     private $_data;
 
     /**
+     * RequestInit constructor.
+     * @param string $orderId Номер заказа в системе Продавца
+     * @param int $amount Сумма в копейках
+     */
+    public function __construct(string $orderId, int $amount)
+    {
+        $this->setOrderId($orderId);
+        $this->setAmount($amount);
+    }
+
+    /**
      * Функция заполняет свойство $_dataFields значениями полей запроса
      */
     protected function buildDataFields(): void

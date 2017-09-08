@@ -28,12 +28,22 @@ Usage
 Config application :
 
 ```php
-
+'components' => [
+    //  ...
+    'tinkoffPay' => [
+            'class' => \chumakovanton\tinkoffPay\TinkoffPay::className(),
+            'terminalKey' => 'terminalKey',
+            'secretKey' => 'secretKey',
+            'apiUrl' => 'test.loc/'
+        ],
+]
 
 ```
 
 Once the extension is installed, simply use it in your code by  :
 
 ```php
+
+
 
 ```
