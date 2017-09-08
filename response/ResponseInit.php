@@ -9,7 +9,23 @@
 namespace chumakovanton\tinkoffPay\response;
 
 
-class ResponseInit
+class ResponseInit extends AbstractResponse
 {
+    /**
+     * Сумма в копейках
+     * @return int
+     */
+    public function getAmount(): int
+    {
+        return $this->_response['Amount'];
+    }
 
+    /**
+     * Ссылка на страницу оплаты. По умолчанию ссылка доступна в течении 24 часов.
+     * @return string(100)
+     */
+    public function getPaymentUrl(): string
+    {
+        return $this->_response['PaymentURL'];
+    }
 }

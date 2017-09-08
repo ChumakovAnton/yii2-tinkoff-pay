@@ -16,6 +16,11 @@ abstract class AbstractResponse implements ResponseInterface
      */
     protected $_response;
 
+    public function __construct(string $jsonResponse)
+    {
+        $this->_response = json_decode($jsonResponse, true);
+    }
+
     /**
      * Успешность операции
      * @return bool
@@ -31,7 +36,11 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getError(): ?ErrorResponse
     {
-        // TODO: Implement getError() method.
+        $error = null;
+        if ($this->_response['ErrorCode'] !== '0') {
+            $error = new ErrorResponse();
+        }
+        return $error;
     }
 
     /**
@@ -40,7 +49,7 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getStatus(): string
     {
-        // TODO: Implement getStatus() method.
+        return $this->_response['Status'];
     }
 
     /**
@@ -49,7 +58,7 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getPaymentId(): int
     {
-        // TODO: Implement getPaymentId() method.
+        return $this->_response['PaymentId'];
     }
 
     /**
@@ -58,7 +67,7 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getTerminalKey(): string
     {
-        // TODO: Implement getTerminalKey() method.
+        return $this->_response['TerminalKey'];
     }
 
     /**
@@ -67,7 +76,7 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getOrderId(): string
     {
-        // TODO: Implement getOrderId() method.
+        return $this->_response['OrderId'];
     }
 
     /**
@@ -76,7 +85,7 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getMessage(): ?string
     {
-        // TODO: Implement getMessage() method.
+        return $this->_response['Message'];
     }
 
     /**
@@ -85,6 +94,6 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getDetails(): ?string
     {
-        // TODO: Implement getDetails() method.
+        return $this->_response['Details'];
     }
 }

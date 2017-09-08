@@ -11,8 +11,9 @@ namespace chumakovanton\tinkoffPay;
 
 use chumakovanton\tinkoffPay\request\RequestInit;
 use chumakovanton\tinkoffPay\request\RequestInterface;
+use chumakovanton\tinkoffPay\response\ResponseInit;
+use RuntimeException;
 use yii\base\Object;
-use yii\web\HttpException;
 
 /**
  * Class TinkoffPay
@@ -20,6 +21,10 @@ use yii\web\HttpException;
  * @author Chumakov Anton <anton.4umakov@yandex.ru>
  *
  * @package chumakovanton\tinkoffPay
+ *
+ * @property string $terminalKey
+ * @property string $secretKey
+ * @property string $apiUrl
  */
 class TinkoffPay extends Object
 {
@@ -35,12 +40,6 @@ class TinkoffPay extends Object
      * @var string
      */
     private $_secretKey;
-
-    private $_paymentId;
-    private $_status;
-    private $_error;
-    private $_response;
-    private $_paymentUrl;
 
     /**
      * Constructor
@@ -59,11 +58,12 @@ class TinkoffPay extends Object
      *
      * @param RequestInit $request mixed You could use associative array or url params string
      *
-     * @return mixed
+     * @return ResponseInit
+     * @throws RuntimeException
      */
-    public function initPay(RequestInit $request)
+    public function initPay(RequestInit $request): ResponseInit
     {
-        return $this->buildQuery('Init', $request);
+        return new ResponseInit($this->buildQuery('Init', $request));
     }
 
     /**
@@ -181,16 +181,20 @@ class TinkoffPay extends Object
      * @param string $path API method name
      * @param RequestInterface $request query params
      *
-     * @return mixed
-     * @throws HttpException
+     * @return string JSON string response
+     * @throws RuntimeException
      */
-    public function buildQuery(string $path, RequestInterface $request)
+    protected function buildQuery(string $path, RequestInterface $request): string
     {
         $url = $this->_api_url;
 
         $url = $this->_combineUrl($url, $path);
 
-        return $this->_sendRequest($url, $request);
+        $postData = $request->setSecretKey($this->_secretKey)
+            ->setTerminalKey($this->_terminalKey)
+            ->serialize();
+
+        return $this->_sendRequest($url, $postData);
     }
 
     /**
@@ -198,7 +202,7 @@ class TinkoffPay extends Object
      *
      * @return string
      */
-    private function _combineUrl(): string
+    protected function _combineUrl(): string
     {
         $args = func_get_args();
         $url = '';
@@ -220,60 +224,32 @@ class TinkoffPay extends Object
      * Main method. Call API with params
      *
      * @param string $api_url API Url
-     * @param RequestInterface $args API params
+     * @param string $postData Data in JSON string
+     * @return string JSON string response
+     * @throws RuntimeException
      *
-     * @return mixed
-     * @throws HttpException
      */
-    private function _sendRequest(string $api_url, RequestInterface $args)
+    protected function _sendRequest(string $api_url, string $postData): string
     {
-        $this->_error = '';
-
-        $postFields = $args->setSecretKey($this->_secretKey)
-            ->setTerminalKey($this->_terminalKey)
-            ->serialize();
-
         if ($curl = curl_init()) {
             curl_setopt($curl, CURLOPT_URL, $api_url);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_POST, true);
-            if (!empty($postFields)) {
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $postFields);
+            if (!empty($postData)) {
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
             }
             $out = curl_exec($curl);
-
-            $this->_response = $out;
-            $json = json_decode($out);
-            if ($json) {
-                if (@$json->ErrorCode !== "0") {
-                    $this->_error = @$json->Details;
-                } else {
-                    $this->_paymentUrl = @$json->PaymentURL;
-                    $this->_paymentId = @$json->PaymentId;
-                    $this->_status = @$json->Status;
-                }
-            }
-
             curl_close($curl);
 
             return $out;
         }
 
-        throw new HttpException(
+        throw new RuntimeException(
             'Can not create connection to ' . $api_url . ' with args '
-            . $args, 404
+            . $postData, 404
         );
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getResponse()
-    {
-        return htmlentities($this->_response);
     }
 
     /**
@@ -304,5 +280,13 @@ class TinkoffPay extends Object
     {
         $this->_secretKey = $secretKey;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getApiUrl(): string
+    {
+        return $this->_api_url;
     }
 }
