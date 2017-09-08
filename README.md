@@ -34,7 +34,7 @@ Config application :
             'class' => \chumakovanton\tinkoffPay\TinkoffPay::className(),
             'terminalKey' => 'terminalKey',
             'secretKey' => 'secretKey',
-            'apiUrl' => 'test.loc/'
+            'apiUrl' => 'https://securepay.tinkoff.ru/v2'
         ],
 ]
 
@@ -44,6 +44,13 @@ Once the extension is installed, simply use it in your code by  :
 
 ```php
 
+$paymentService = Yii::$app->paymentService;
 
+$paymentRequest = new RequestInit('order1', 1000);
+$paymentRequest->addData('user_id', Yii::$app->user->id);
+
+$response = $paymentService->initPay($paymentRequest);
+
+$paymentUrl = $response->getPaymentUrl();
 
 ```
