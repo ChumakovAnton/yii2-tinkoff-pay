@@ -9,6 +9,8 @@
 namespace chumakovanton\tinkoffPay\response;
 
 
+use yii\helpers\Json;
+
 abstract class AbstractResponse implements ResponseInterface
 {
     /**
@@ -18,7 +20,7 @@ abstract class AbstractResponse implements ResponseInterface
 
     public function __construct(string $jsonResponse)
     {
-        $this->_response = json_decode($jsonResponse, true);
+        $this->_response = Json::decode($jsonResponse);
     }
 
     /**
@@ -27,7 +29,7 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getSuccess(): bool
     {
-        return $this->_response['Success'];
+        return !empty($this->_response) && $this->_response['Success'];
     }
 
     /**

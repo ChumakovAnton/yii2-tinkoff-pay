@@ -42,18 +42,6 @@ class TinkoffPay extends Object
     private $_secretKey;
 
     /**
-     * Constructor
-     *
-     * @param array $config
-     */
-    public function __construct(array $config = [])
-    {
-        $config = array_merge(require __DIR__ . '/config.php', $config);
-
-        parent::__construct($config);
-    }
-
-    /**
      * Initialize the payment
      *
      * @param RequestInit $request mixed You could use associative array or url params string

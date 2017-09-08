@@ -10,6 +10,7 @@ namespace chumakovanton\tinkoffPay\request;
 
 
 use DateTime;
+use yii\helpers\Json;
 
 class RequestInit extends AbstractRequest
 {
@@ -290,10 +291,11 @@ class RequestInit extends AbstractRequest
 
     /**
      * @return string
+     * @throws \yii\base\InvalidParamException
      */
     public function getData(): string
     {
-        return json_encode($this->_data);
+        return Json::encode($this->_data);
     }
 
     /**
