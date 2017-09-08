@@ -40,7 +40,7 @@ abstract class AbstractResponse implements ResponseInterface
     {
         $error = null;
         if ($this->_response['ErrorCode'] !== '0') {
-            $error = new ErrorResponse();
+            $error = new ErrorResponse($this->_response['ErrorCode']);
         }
         return $error;
     }
@@ -85,7 +85,7 @@ abstract class AbstractResponse implements ResponseInterface
      * Краткое описание ошибки
      * @return string|null
      */
-    public function getMessage(): ?string
+    private function getMessage(): ?string
     {
         return $this->_response['Message'];
     }
@@ -94,7 +94,7 @@ abstract class AbstractResponse implements ResponseInterface
      * Подробное описание ошибки
      * @return null|string
      */
-    public function getDetails(): ?string
+    private function getDetails(): ?string
     {
         return $this->_response['Details'];
     }

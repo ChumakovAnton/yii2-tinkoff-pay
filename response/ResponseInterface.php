@@ -50,16 +50,4 @@ interface ResponseInterface
      * @return string
      */
     public function getOrderId(): string;
-
-    /**
-     * Краткое описание ошибки
-     * @return string|null
-     */
-    public function getMessage(): ?string;
-
-    /**
-     * Подробное описание ошибки
-     * @return null|string
-     */
-    public function getDetails(): ?string;
 }
