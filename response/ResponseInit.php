@@ -13,18 +13,18 @@ class ResponseInit extends AbstractResponse
 {
     /**
      * Сумма в копейках
-     * @return int
+     * @return null|int
      */
-    public function getAmount(): int
+    public function getAmount(): ?int
     {
         return $this->_response['Amount'];
     }
 
     /**
      * Ссылка на страницу оплаты. По умолчанию ссылка доступна в течении 24 часов.
-     * @return string(100)
+     * @return null|string(100)
      */
-    public function getPaymentUrl(): string
+    public function getPaymentUrl(): ?string
     {
         return $this->_response['PaymentURL'];
     }

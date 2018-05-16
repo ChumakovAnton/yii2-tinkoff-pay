@@ -154,9 +154,9 @@ class RequestInit extends AbstractRequest
      * Обрезать строку до максимальной длины
      * @param string $value Строка
      * @param int $maxLength Максимальная длина строки
-     * @return string
+     * @return null|string
      */
-    private static function truncateString(string $value, int $maxLength): string
+    private static function truncateString(string $value, int $maxLength): ?string
     {
         if (mb_strlen($value) > $maxLength) {
             return mb_substr($value, 0, $maxLength);
@@ -293,82 +293,82 @@ class RequestInit extends AbstractRequest
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getRedirectDueDate(): string
+    public function getRedirectDueDate(): ?string
     {
         return $this->_redirectDueDate->format('Y-m-d\TH:i:s\Z');
     }
 
     /**
-     * @return string
+     * @return null|string
      * @throws \yii\base\InvalidParamException
      */
-    public function getData(): string
+    public function getData(): ?string
     {
         return Json::encode($this->_data);
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getOrderId(): string
+    public function getOrderId(): ?string
     {
         return $this->_orderId;
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getAmount(): int
+    public function getAmount(): ?int
     {
         return $this->_amount;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getIP(): string
+    public function getIP(): ?string
     {
         return $this->_IP;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->_description;
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getCurrency(): int
+    public function getCurrency(): ?int
     {
         return $this->_currency;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getLanguage(): string
+    public function getLanguage(): ?string
     {
         return $this->_language;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getCustomerKey(): string
+    public function getCustomerKey(): ?string
     {
         return $this->_customerKey;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getRecurrent(): string
+    public function getRecurrent(): ?string
     {
         return $this->_recurrent;
     }

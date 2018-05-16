@@ -25,7 +25,7 @@ interface RequestInterface
 
     /**
      * Сериализовать объект
-     * @return string
+     * @return null|string
      */
-    public function serialize(): string;
+    public function serialize(): ?string;
 }

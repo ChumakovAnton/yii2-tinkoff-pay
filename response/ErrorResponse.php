@@ -68,9 +68,9 @@ class ErrorResponse
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getMessage(): string
+    public function getMessage(): ?string
     {
         return $this->_message;
     }
@@ -86,9 +86,9 @@ class ErrorResponse
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getDetails(): string
+    public function getDetails(): ?string
     {
         return $this->_details;
     }

@@ -47,36 +47,36 @@ abstract class AbstractResponse implements ResponseInterface
 
     /**
      * Получить статус транзакции
-     * @return string
+     * @return null|string
      */
-    public function getStatus(): string
+    public function getStatus(): ?string
     {
         return $this->_response['Status'];
     }
 
     /**
      * Уникальный идентификатор транзакции в сервисе оплаты
-     * @return int
+     * @return null|int
      */
-    public function getPaymentId(): int
+    public function getPaymentId(): ?int
     {
         return $this->_response['PaymentId'];
     }
 
     /**
      * Идентификатор терминала
-     * @return string
+     * @return null|string
      */
-    public function getTerminalKey(): string
+    public function getTerminalKey(): ?string
     {
         return $this->_response['TerminalKey'];
     }
 
     /**
      * Номер заказа в системе
-     * @return string
+     * @return null|string
      */
-    public function getOrderId(): string
+    public function getOrderId(): ?string
     {
         return $this->_response['OrderId'];
     }

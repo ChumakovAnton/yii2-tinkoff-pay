@@ -31,23 +31,23 @@ interface ResponseInterface
      * Получить статус транзакции
      * @return string
      */
-    public function getStatus(): string;
+    public function getStatus(): ?string;
 
     /**
      * Уникальный идентификатор транзакции в сервисе оплаты
      * @return int
      */
-    public function getPaymentId(): int;
+    public function getPaymentId(): ?int;
 
     /**
      * Идентификатор терминала
      * @return string
      */
-    public function getTerminalKey(): string;
+    public function getTerminalKey(): ?string;
 
     /**
      * Номер заказа в системе
      * @return string
      */
-    public function getOrderId(): string;
+    public function getOrderId(): ?string;
 }
