@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anton
- * Date: 07.09.17
- * Time: 15:34
- */
 
 namespace chumakovanton\tinkoffPay\response;
 
@@ -17,7 +11,7 @@ class ResponseInit extends AbstractResponse
      */
     public function getAmount(): ?int
     {
-        return $this->_response['Amount'];
+        return $this->response['Amount'];
     }
 
     /**
@@ -26,6 +20,6 @@ class ResponseInit extends AbstractResponse
      */
     public function getPaymentUrl(): ?string
     {
-        return $this->_response['PaymentURL'];
+        return $this->response['PaymentURL'];
     }
 }

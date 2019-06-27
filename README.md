@@ -46,10 +46,16 @@ Once the extension is installed, simply use it in your code by  :
 
 $paymentService = Yii::$app->paymentService;
 
-$paymentRequest = new RequestInit('order1', 1000);
+$paymentRequest = $paymentService->initPay('order1', 1000);
+
+//optional data
 $paymentRequest->addData('user_id', Yii::$app->user->id);
 
-$response = $paymentService->initPay($paymentRequest);
+$response = $paymentService->send();
+
+if ($response->getStatusCode() !== 200) {
+    //handle exception
+}
 
 $paymentUrl = $response->getPaymentUrl();
 
