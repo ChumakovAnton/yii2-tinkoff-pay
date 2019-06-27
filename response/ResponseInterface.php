@@ -19,13 +19,7 @@ interface ResponseInterface
      * Успешность операции
      * @return bool
      */
-    public function getSuccess(): bool;
-
-    /**
-     * Получить ошибку, которую вернул сервис оплаты
-     * @return ErrorResponse|null
-     */
-    public function getError(): ?ErrorResponse;
+    public function isSuccess(): bool;
 
     /**
      * Получить статус транзакции

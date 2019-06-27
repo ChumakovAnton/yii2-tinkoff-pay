@@ -131,12 +131,22 @@ abstract class AbstractRequest implements RequestInterface
             curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
         }
 
-        $statusCode = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
         $body = curl_exec($curl);
+        $statusCode = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
 
         curl_close($curl);
 
-        return new HttpResponse($statusCode, (string)$body);
+        $decodedResponse = json_decode($body, true);
+
+        if (!in_array($statusCode, [200,201,204])) {
+            throw new HttpException($statusCode, $body);
+        }
+
+        if (isset($decodedResponse['ErrorCode']) && (int)$decodedResponse['ErrorCode'] !== 0) {
+            throw new HttpException(400, $body);
+        }
+
+        return new HttpResponse($statusCode, $decodedResponse);
     }
 
     public function setCredentials(string $apiUrl, string $terminalKey, string $secretKey): RequestInterface

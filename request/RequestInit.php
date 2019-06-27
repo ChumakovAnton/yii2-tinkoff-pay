@@ -257,7 +257,7 @@ class RequestInit extends AbstractRequest
     public function send(): ResponseInterface
     {
         $response = $this->_sendRequest('Init');
-        var_dump($response);
-        return new ResponseInit($response->getStatusCode(), $response->getBody());
+
+        return new ResponseInit($response->getStatusCode(), $response->getPayload());
     }
 }

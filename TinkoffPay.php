@@ -57,7 +57,7 @@ class TinkoffPay extends BaseObject
      */
     public function getState($args)
     {
-        return $this->buildQuery('GetState', $args);
+        return ;//todo $this->buildQuery('GetState', $args);
     }
 
     /**
@@ -69,7 +69,7 @@ class TinkoffPay extends BaseObject
      */
     public function confirm($args)
     {
-        return $this->buildQuery('Confirm', $args);
+        return ;//todo $this->buildQuery('Confirm', $args);
     }
 
     /**
@@ -82,7 +82,7 @@ class TinkoffPay extends BaseObject
      */
     public function charge($args)
     {
-        return $this->buildQuery('Charge', $args);
+        return ;//todo $this->buildQuery('Charge', $args);
     }
 
     /**
@@ -94,7 +94,7 @@ class TinkoffPay extends BaseObject
      */
     public function addCustomer($args)
     {
-        return $this->buildQuery('AddCustomer', $args);
+        return ;//todo $this->buildQuery('AddCustomer', $args);
     }
 
     /**
@@ -106,7 +106,7 @@ class TinkoffPay extends BaseObject
      */
     public function getCustomer($args)
     {
-        return $this->buildQuery('GetCustomer', $args);
+        return ;//todo $this->buildQuery('GetCustomer', $args);
     }
 
     /**
@@ -118,7 +118,7 @@ class TinkoffPay extends BaseObject
      */
     public function removeCustomer($args)
     {
-        return $this->buildQuery('RemoveCustomer', $args);
+        return ;//todo $this->buildQuery('RemoveCustomer', $args);
     }
 
     /**
@@ -130,7 +130,7 @@ class TinkoffPay extends BaseObject
      */
     public function getCardList($args)
     {
-        return $this->buildQuery('GetCardList', $args);
+        return ;//todo $this->buildQuery('GetCardList', $args);
     }
 
     /**
@@ -142,7 +142,7 @@ class TinkoffPay extends BaseObject
      */
     public function removeCard($args)
     {
-        return $this->buildQuery('RemoveCard', $args);
+        return ;//todo $this->buildQuery('RemoveCard', $args);
     }
 
     /**
@@ -153,7 +153,7 @@ class TinkoffPay extends BaseObject
      */
     public function resend()
     {
-        return $this->buildQuery('Resend', null);
+        return ;//todo $this->buildQuery('Resend', null);
     }
 
     /**

@@ -3,19 +3,15 @@
 namespace chumakovanton\tinkoffPay\response;
 
 
-use yii\helpers\Json;
-
 abstract class AbstractResponse implements ResponseInterface
 {
     protected $response;
     private $statusCode;
-    private $jsonResponse;
 
-    public function __construct(int $statusCode, string $jsonResponse)
+    public function __construct(int $statusCode, array $response)
     {
         $this->statusCode = $statusCode;
-        $this->jsonResponse = $jsonResponse;
-        $this->response = Json::decode($jsonResponse);
+        $this->response = $response;
     }
 
     public function getStatusCode(): int
@@ -27,22 +23,9 @@ abstract class AbstractResponse implements ResponseInterface
      * Успешность операции
      * @return bool
      */
-    public function getSuccess(): bool
+    public function isSuccess(): bool
     {
-        return !empty($this->response) && $this->response['Success'];
-    }
-
-    /**
-     * Получить ошибку, которую вернул сервис оплаты
-     * @return ErrorResponse|null
-     */
-    public function getError(): ?ErrorResponse
-    {
-        $error = null;
-        if ($this->response['ErrorCode'] !== '0') {
-            $error = new ErrorResponse((int)$this->response['ErrorCode']);
-        }
-        return $error;
+        return isset($this->response['Success']) && (bool)$this->response['Success'];
     }
 
     /**
@@ -51,7 +34,7 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getStatus(): ?string
     {
-        return $this->response['Status'];
+        return $this->response['Status'] ?? null;
     }
 
     /**
@@ -60,7 +43,7 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getPaymentId(): ?int
     {
-        return $this->response['PaymentId'];
+        return $this->response['PaymentId'] ?? null;
     }
 
     /**
@@ -69,7 +52,7 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getTerminalKey(): ?string
     {
-        return $this->response['TerminalKey'];
+        return $this->response['TerminalKey'] ?? null;
     }
 
     /**
@@ -78,7 +61,7 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getOrderId(): ?string
     {
-        return $this->response['OrderId'];
+        return $this->response['OrderId'] ?? null;
     }
 
     /**
@@ -87,7 +70,7 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getMessage(): ?string
     {
-        return $this->response['Message'];
+        return $this->response['Message'] ?? null;
     }
 
     /**
@@ -96,6 +79,6 @@ abstract class AbstractResponse implements ResponseInterface
      */
     public function getDetails(): ?string
     {
-        return $this->response['Details'];
+        return $this->response['Details'] ?? null;
     }
 }

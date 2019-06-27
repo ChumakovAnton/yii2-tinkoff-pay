@@ -11,7 +11,7 @@ class ResponseInit extends AbstractResponse
      */
     public function getAmount(): ?int
     {
-        return $this->response['Amount'];
+        return $this->response['Amount'] ?? null;
     }
 
     /**
@@ -20,6 +20,6 @@ class ResponseInit extends AbstractResponse
      */
     public function getPaymentUrl(): ?string
     {
-        return $this->response['PaymentURL'];
+        return $this->response['PaymentURL'] ?? null;
     }
 }

@@ -5,12 +5,12 @@ namespace chumakovanton\tinkoffPay\response;
 class HttpResponse
 {
     private $statusCode;
-    private $body;
+    private $payload;
 
-    public function __construct(int $statusCode, ?string $body = null)
+    public function __construct(int $statusCode, array $payload = null)
     {
         $this->statusCode = $statusCode;
-        $this->body = $body;
+        $this->payload = $payload;
     }
 
     public function getStatusCode(): int
@@ -18,8 +18,8 @@ class HttpResponse
         return $this->statusCode;
     }
 
-    public function getBody(): ?string
+    public function getPayload(): ?array
     {
-        return $this->body;
+        return $this->payload;
     }
 }
