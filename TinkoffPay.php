@@ -1,19 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anton
- * Date: 07.09.17
- * Time: 11:24
- */
 
 namespace chumakovanton\tinkoffPay;
 
 
 use chumakovanton\tinkoffPay\request\RequestInit;
-use chumakovanton\tinkoffPay\request\RequestInterface;
-use chumakovanton\tinkoffPay\response\ResponseInit;
-use RuntimeException;
-use yii\base\Object;
+use yii\base\BaseObject;
 
 /**
  * Class TinkoffPay
@@ -26,12 +17,12 @@ use yii\base\Object;
  * @property string $secretKey
  * @property string $apiUrl
  */
-class TinkoffPay extends Object
+class TinkoffPay extends BaseObject
 {
     /**
      * @var string
      */
-    private $_api_url;
+    private $_apiUrl;
     /**
      * @var string
      */
@@ -44,14 +35,17 @@ class TinkoffPay extends Object
     /**
      * Initialize the payment
      *
-     * @param RequestInit $request mixed You could use associative array or url params string
-     *
-     * @return ResponseInit
-     * @throws RuntimeException
+     * @param string $orderId
+     * @param int $amount
+     * @return RequestInit
      */
-    public function initPay(RequestInit $request): ResponseInit
+    public function initPay(string $orderId, int $amount): RequestInit
     {
-        return new ResponseInit($this->buildQuery('Init', $request));
+        $request = new RequestInit($orderId, $amount);
+
+        $request->setCredentials($this->_apiUrl, $this->_terminalKey, $this->_secretKey);
+
+        return $request;
     }
 
     /**
@@ -63,7 +57,7 @@ class TinkoffPay extends Object
      */
     public function getState($args)
     {
-        return $this->buildQuery('GetState', $args);
+        return ;//todo $this->buildQuery('GetState', $args);
     }
 
     /**
@@ -75,7 +69,7 @@ class TinkoffPay extends Object
      */
     public function confirm($args)
     {
-        return $this->buildQuery('Confirm', $args);
+        return ;//todo $this->buildQuery('Confirm', $args);
     }
 
     /**
@@ -88,7 +82,7 @@ class TinkoffPay extends Object
      */
     public function charge($args)
     {
-        return $this->buildQuery('Charge', $args);
+        return ;//todo $this->buildQuery('Charge', $args);
     }
 
     /**
@@ -100,7 +94,7 @@ class TinkoffPay extends Object
      */
     public function addCustomer($args)
     {
-        return $this->buildQuery('AddCustomer', $args);
+        return ;//todo $this->buildQuery('AddCustomer', $args);
     }
 
     /**
@@ -112,7 +106,7 @@ class TinkoffPay extends Object
      */
     public function getCustomer($args)
     {
-        return $this->buildQuery('GetCustomer', $args);
+        return ;//todo $this->buildQuery('GetCustomer', $args);
     }
 
     /**
@@ -124,7 +118,7 @@ class TinkoffPay extends Object
      */
     public function removeCustomer($args)
     {
-        return $this->buildQuery('RemoveCustomer', $args);
+        return ;//todo $this->buildQuery('RemoveCustomer', $args);
     }
 
     /**
@@ -136,7 +130,7 @@ class TinkoffPay extends Object
      */
     public function getCardList($args)
     {
-        return $this->buildQuery('GetCardList', $args);
+        return ;//todo $this->buildQuery('GetCardList', $args);
     }
 
     /**
@@ -148,7 +142,7 @@ class TinkoffPay extends Object
      */
     public function removeCard($args)
     {
-        return $this->buildQuery('RemoveCard', $args);
+        return ;//todo $this->buildQuery('RemoveCard', $args);
     }
 
     /**
@@ -159,94 +153,16 @@ class TinkoffPay extends Object
      */
     public function resend()
     {
-        return $this->buildQuery('Resend', null);
+        return ;//todo $this->buildQuery('Resend', null);
     }
 
     /**
-     * Builds a query string and call sendRequest method.
-     * Could be used to custom API call method.
-     *
-     * @param string $path API method name
-     * @param RequestInterface $request query params
-     *
-     * @return string JSON string response
-     * @throws RuntimeException
-     */
-    protected function buildQuery(string $path, RequestInterface $request): string
-    {
-        $url = $this->_api_url;
-
-        $url = $this->_combineUrl($url, $path);
-
-        $postData = $request->setSecretKey($this->_secretKey)
-            ->setTerminalKey($this->_terminalKey)
-            ->serialize();
-
-        return $this->_sendRequest($url, $postData);
-    }
-
-    /**
-     * Combines parts of URL. Simply gets all parameters and puts '/' between
-     *
-     * @return string
-     */
-    protected function _combineUrl(): string
-    {
-        $args = func_get_args();
-        $url = '';
-        foreach ($args as $arg) {
-            if (is_string($arg)) {
-                if ($arg[strlen($arg) - 1] !== '/') {
-                    $arg .= '/';
-                }
-                $url .= $arg;
-            } else {
-                continue;
-            }
-        }
-
-        return $url;
-    }
-
-    /**
-     * Main method. Call API with params
-     *
-     * @param string $api_url API Url
-     * @param string $postData Data in JSON string
-     * @return string JSON string response
-     * @throws RuntimeException
-     *
-     */
-    protected function _sendRequest(string $api_url, string $postData): string
-    {
-        if ($curl = curl_init()) {
-            curl_setopt($curl, CURLOPT_URL, $api_url);
-            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_POST, true);
-            if (!empty($postData)) {
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
-            }
-            $out = curl_exec($curl);
-            curl_close($curl);
-
-            return $out;
-        }
-
-        throw new RuntimeException(
-            'Can not create connection to ' . $api_url . ' with args '
-            . $postData, 404
-        );
-    }
-
-    /**
-     * @param string $api_url
+     * @param string $apiUrl
      * @return TinkoffPay
      */
-    public function setApiUrl($api_url): TinkoffPay
+    public function setApiUrl($apiUrl): TinkoffPay
     {
-        $this->_api_url = $api_url;
+        $this->_apiUrl = $apiUrl;
         return $this;
     }
 
@@ -268,13 +184,5 @@ class TinkoffPay extends Object
     {
         $this->_secretKey = $secretKey;
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getApiUrl(): string
-    {
-        return $this->_api_url;
     }
 }

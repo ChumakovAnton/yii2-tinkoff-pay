@@ -44,12 +44,18 @@ Once the extension is installed, simply use it in your code by  :
 
 ```php
 
-$paymentService = Yii::$app->paymentService;
+/** @var \chumakovanton\tinkoffPay\TinkoffPay $paymentService */
+$paymentService = Yii::$app->tinkoffPay;
 
-$paymentRequest = new RequestInit('order1', 1000);
-$paymentRequest->addData('user_id', Yii::$app->user->id);
+$paymentRequest = $paymentService->initPay('order1', 1000);
 
-$response = $paymentService->initPay($paymentRequest);
+$paymentRequest->addData('user_id', 123);
+
+try {
+    $response = $paymentRequest->send();
+} catch (\chumakovanton\tinkoffPay\exceptions\HttpException $exception) {
+    throw new \yii\web\HttpException($exception->statusCode, $exception->getMessage());
+}
 
 $paymentUrl = $response->getPaymentUrl();
 

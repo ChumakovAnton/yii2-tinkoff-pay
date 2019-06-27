@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anton
- * Date: 07.09.17
- * Time: 15:34
- */
 
 namespace chumakovanton\tinkoffPay\response;
 
@@ -16,16 +10,16 @@ namespace chumakovanton\tinkoffPay\response;
 interface ResponseInterface
 {
     /**
+     * Код ответа
+     * @return int
+     */
+    public function getStatusCode(): int;
+
+    /**
      * Успешность операции
      * @return bool
      */
-    public function getSuccess(): bool;
-
-    /**
-     * Получить ошибку, которую вернул сервис оплаты
-     * @return ErrorResponse|null
-     */
-    public function getError(): ?ErrorResponse;
+    public function isSuccess(): bool;
 
     /**
      * Получить статус транзакции

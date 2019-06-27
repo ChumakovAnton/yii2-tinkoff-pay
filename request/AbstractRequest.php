@@ -1,12 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anton
- * Date: 07.09.17
- * Time: 15:17
- */
 
 namespace chumakovanton\tinkoffPay\request;
+
+use chumakovanton\tinkoffPay\exceptions\HttpException;
+use chumakovanton\tinkoffPay\response\HttpResponse;
 
 /**
  * Class AbstractRequest
@@ -17,16 +14,20 @@ namespace chumakovanton\tinkoffPay\request;
 abstract class AbstractRequest implements RequestInterface
 {
     /**
+     * @var string
+     */
+    private $_apiUrl;
+    /**
      * Идентификатор терминала, выдается Продавцу Банком
      * @var string(20)
      */
     protected $_terminalKey;
+
     /**
      * Секретный ключ терминала
      * @var string
      */
     protected $_secretKey;
-
     /**
      * Массив полей запроса
      * @var array
@@ -42,7 +43,7 @@ abstract class AbstractRequest implements RequestInterface
      * Сериализовать объект
      * @return null|string
      */
-    public function serialize(): ?string
+    protected function serializeDataFields(): ?string
     {
         $this->buildDataFields();
 
@@ -52,7 +53,7 @@ abstract class AbstractRequest implements RequestInterface
 
         $this->_dataFields['Token'] = $this->_generateToken();
 
-        return http_build_query($this->_dataFields);
+        return json_encode($this->_dataFields);
     }
 
     /**
@@ -72,22 +73,88 @@ abstract class AbstractRequest implements RequestInterface
     }
 
     /**
-     * @param string $terminalKey
-     * @return RequestInterface
+     * Combines parts of URL. Simply gets all parameters and puts '/' between
+     *
+     * @return string
      */
-    public function setTerminalKey(string $terminalKey): RequestInterface
+    protected function _combineUrl(): string
     {
-        $this->_terminalKey = $terminalKey;
-        return $this;
+        $args = func_get_args();
+        $url = '';
+        foreach ($args as $arg) {
+            if (is_string($arg)) {
+                if ($arg[strlen($arg) - 1] !== '/') {
+                    $arg .= '/';
+                }
+                $url .= $arg;
+            } else {
+                continue;
+            }
+        }
+
+        return $url;
     }
 
     /**
-     * @param string $secretKey
-     * @return RequestInterface
+     * @param string $path
+     * @return HttpResponse
+     * @throws HttpException
      */
-    public function setSecretKey(string $secretKey): RequestInterface
+    protected function _sendRequest(string $path): HttpResponse
     {
+        $url = $this->_apiUrl;
+
+        $url = $this->_combineUrl($url, $path);
+
+        $postData = $this->serializeDataFields();
+
+        $curl = curl_init();
+
+        if (false === $curl) {
+            throw new HttpException(
+                'Can not create connection to ' . $url . ' with args '
+                . $postData, 404
+            );
+        }
+
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_POST, true);
+
+        if (!empty($postData)) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($postData))
+            );
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
+        }
+
+        $body = curl_exec($curl);
+        $statusCode = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+
+        curl_close($curl);
+
+        $decodedResponse = json_decode($body, true);
+
+        if (!in_array($statusCode, [200,201,204])) {
+            throw new HttpException($statusCode, $body);
+        }
+
+        if (isset($decodedResponse['ErrorCode']) && (int)$decodedResponse['ErrorCode'] !== 0) {
+            throw new HttpException(400, $body);
+        }
+
+        return new HttpResponse($statusCode, $decodedResponse);
+    }
+
+    public function setCredentials(string $apiUrl, string $terminalKey, string $secretKey): RequestInterface
+    {
+        $this->_apiUrl = $apiUrl;
+        $this->_terminalKey = $terminalKey;
         $this->_secretKey = $secretKey;
+
         return $this;
     }
 }

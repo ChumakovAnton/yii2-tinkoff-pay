@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anton
- * Date: 07.09.17
- * Time: 15:36
- */
 
 namespace chumakovanton\tinkoffPay\response;
 
@@ -79,7 +73,7 @@ class ErrorResponse
      * @param string $message
      * @return $this
      */
-    public function setMessage(string $message): self
+    public function setMessage(?string $message = null): self
     {
         $this->_message = $message;
         return $this;
@@ -97,10 +91,18 @@ class ErrorResponse
      * @param string $details
      * @return $this
      */
-    public function setDetails(string $details): self
+    public function setDetails(?string $details = null): self
     {
         $this->_details = $details;
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getErrorCode(): int
+    {
+        return $this->_error_code;
     }
 
 
