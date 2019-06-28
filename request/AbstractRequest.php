@@ -62,12 +62,15 @@ abstract class AbstractRequest implements RequestInterface
      */
     private function _generateToken(): ?string
     {
-        $token = '';
         $this->_dataFields['Password'] = $this->_secretKey;
-        ksort($this->_dataFields);
-        foreach ($this->_dataFields as $field) {
-            $token .= $field;
-        }
+
+        $signedFields = array_filter($this->_dataFields, function ($key) {
+            return ($key !== 'Receipt' && $key !== 'DATA');
+        }, ARRAY_FILTER_USE_KEY);
+
+        ksort($signedFields);
+
+        $token = implode('', $signedFields);
 
         return hash('sha256', $token);
     }

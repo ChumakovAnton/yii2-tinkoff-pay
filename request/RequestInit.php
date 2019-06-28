@@ -140,7 +140,7 @@ class RequestInit extends AbstractRequest
             $this->_dataFields['RedirectDueDate'] = $this->_redirectDueDate->format('Y-m-d\TH:i:s\Z');
         }
         if (null !== $this->_data) {
-            $this->_dataFields['DATA'] = json_encode($this->_data);
+            $this->_dataFields['DATA'] = $this->_data;
         }
     }
 
